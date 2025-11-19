@@ -1,0 +1,289 @@
+# Q-BIT Default Configuration
+# Advanced Omni Agent & Swarm Intelligence Hub
+
+# System Configuration
+system:
+  name: "Q-BIT"
+  version: "0.1.0"
+  environment: "development"
+  debug: true
+  log_level: "INFO"
+
+# Swarm Configuration
+swarm:
+  strategy: "adaptive"  # adaptive, hierarchical, peer_to_peer, democratic, expert_based
+  max_agents: 10
+  min_agents: 1
+  coordination_timeout: 300  # seconds
+  consensus_threshold: 0.7
+  health_check_interval: 30  # seconds
+  task_timeout: 3600  # seconds
+  retry_attempts: 3
+
+# Agent Configuration
+agents:
+  default:
+    max_concurrent_tasks: 5
+    timeout_seconds: 300
+    retry_attempts: 3
+    log_level: "INFO"
+    health_check_interval: 30
+  
+  code_reviewer:
+    enabled: true
+    max_concurrent_tasks: 3
+    capabilities:
+      - "code_review"
+      - "code_analysis"
+      - "quality"
+    config:
+      review_depth: "deep"
+      quality_threshold: 0.8
+      security_scan: true
+  
+  debugger:
+    enabled: true
+    max_concurrent_tasks: 2
+    capabilities:
+      - "debugging"
+      - "code_analysis"
+      - "testing"
+    config:
+      debug_level: "verbose"
+      trace_execution: true
+      memory_analysis: true
+  
+  architect:
+    enabled: true
+    max_concurrent_tasks: 2
+    capabilities:
+      - "architecture"
+      - "code_generation"
+      - "optimization"
+    config:
+      design_patterns: true
+      performance_optimization: true
+      scalability_analysis: true
+  
+  tester:
+    enabled: true
+    max_concurrent_tasks: 3
+    capabilities:
+      - "testing"
+      - "code_generation"
+      - "code_analysis"
+    config:
+      test_coverage_target: 0.9
+      mutation_testing: true
+      performance_testing: true
+  
+  documenter:
+    enabled: true
+    max_concurrent_tasks: 2
+    capabilities:
+      - "documentation"
+      - "code_analysis"
+    config:
+      documentation_format: "markdown"
+      api_docs: true
+      code_examples: true
+
+# AI Model Configuration
+ai_models:
+  default_provider: "openai"
+  
+  openai:
+    api_key: "${OPENAI_API_KEY}"
+    model: "gpt-4"
+    max_tokens: 4096
+    temperature: 0.1
+    timeout: 60
+  
+  anthropic:
+    api_key: "${ANTHROPIC_API_KEY}"
+    model: "claude-3-sonnet-20240229"
+    max_tokens: 4096
+    temperature: 0.1
+    timeout: 60
+  
+  local:
+    enabled: false
+    model_path: "/models/local-model"
+    device: "cpu"  # cpu, cuda, mps
+
+# Programming Languages Support
+languages:
+  python:
+    enabled: true
+    parser: "tree_sitter"
+    linter: "pylint"
+    formatter: "black"
+    type_checker: "mypy"
+  
+  javascript:
+    enabled: true
+    parser: "tree_sitter"
+    linter: "eslint"
+    formatter: "prettier"
+    type_checker: "typescript"
+  
+  typescript:
+    enabled: true
+    parser: "tree_sitter"
+    linter: "eslint"
+    formatter: "prettier"
+    type_checker: "tsc"
+  
+  java:
+    enabled: false
+    parser: "tree_sitter"
+    linter: "checkstyle"
+    formatter: "google-java-format"
+  
+  cpp:
+    enabled: false
+    parser: "tree_sitter"
+    linter: "clang-tidy"
+    formatter: "clang-format"
+
+# Code Analysis Configuration
+analysis:
+  syntax:
+    enabled: true
+    strict_mode: true
+  
+  semantic:
+    enabled: true
+    deep_analysis: true
+    context_aware: true
+  
+  quality:
+    enabled: true
+    complexity_threshold: 10
+    maintainability_threshold: 0.7
+    duplication_threshold: 0.1
+  
+  security:
+    enabled: true
+    vulnerability_scan: true
+    secret_detection: true
+    dependency_check: true
+  
+  performance:
+    enabled: true
+    bottleneck_detection: true
+    memory_analysis: true
+    optimization_suggestions: true
+
+# Database Configuration
+database:
+  url: "${DATABASE_URL:-postgresql://qbit:qbit_password@localhost:5432/qbit}"
+  pool_size: 10
+  max_overflow: 20
+  pool_timeout: 30
+  pool_recycle: 3600
+
+# Redis Configuration
+redis:
+  url: "${REDIS_URL:-redis://localhost:6379}"
+  max_connections: 100
+  retry_on_timeout: true
+  socket_timeout: 5
+  socket_connect_timeout: 5
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  reload: false
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:8080"
+  
+  websocket:
+    port: 8001
+    max_connections: 1000
+    ping_interval: 30
+    ping_timeout: 10
+  
+  monitoring:
+    port: 8002
+    metrics_enabled: true
+    health_check_enabled: true
+
+# Security Configuration
+security:
+  secret_key: "${SECRET_KEY:-your-secret-key-change-in-production}"
+  algorithm: "HS256"
+  access_token_expire_minutes: 30
+  refresh_token_expire_days: 7
+  
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_size: 20
+  
+  cors:
+    allow_credentials: true
+    allow_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    allow_headers: ["*"]
+
+# Monitoring Configuration
+monitoring:
+  prometheus:
+    enabled: true
+    port: 9090
+    metrics_path: "/metrics"
+  
+  logging:
+    level: "INFO"
+    format: "json"
+    file: "logs/qbit.log"
+    max_size: "100MB"
+    backup_count: 5
+  
+  tracing:
+    enabled: false
+    jaeger_endpoint: "http://localhost:14268/api/traces"
+    sample_rate: 0.1
+
+# Storage Configuration
+storage:
+  type: "local"  # local, s3, gcs, azure
+  
+  local:
+    base_path: "./data"
+    max_file_size: "100MB"
+  
+  s3:
+    bucket: "${S3_BUCKET}"
+    region: "${AWS_REGION:-us-east-1}"
+    access_key: "${AWS_ACCESS_KEY_ID}"
+    secret_key: "${AWS_SECRET_ACCESS_KEY}"
+
+# Task Queue Configuration
+task_queue:
+  broker: "redis"
+  backend: "redis"
+  max_retries: 3
+  retry_delay: 60  # seconds
+  task_timeout: 3600  # seconds
+  worker_concurrency: 4
+
+# Development Configuration
+development:
+  auto_reload: true
+  debug_mode: true
+  profiling: false
+  mock_ai_responses: false
+  test_mode: false
+
+# Production Configuration
+production:
+  auto_reload: false
+  debug_mode: false
+  profiling: true
+  ssl_enabled: true
+  ssl_cert_path: "/etc/ssl/certs/qbit.crt"
+  ssl_key_path: "/etc/ssl/private/qbit.key"
