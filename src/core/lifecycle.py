@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field
 import structlog
 
 from src.core.agent import BaseAgent, AgentStatus, AgentConfig
+import uuid
 
 logger = structlog.get_logger(__name__)
 
@@ -32,7 +33,7 @@ class LifecyclePhase(str, Enum):
 
 class LifecycleEvent(BaseModel):
     """Represents an event in the lifecycle."""
-    event_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    event_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     phase: LifecyclePhase
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     actor: Optional[str] = None

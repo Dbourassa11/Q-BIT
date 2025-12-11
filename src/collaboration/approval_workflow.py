@@ -9,6 +9,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 import structlog
+import uuid
 
 logger = structlog.get_logger(__name__)
 
@@ -42,7 +43,7 @@ class ApproverResponse(BaseModel):
 
 class ApprovalRequest(BaseModel):
     """Represents an approval request."""
-    approval_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    approval_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
     description: str
     content: Any

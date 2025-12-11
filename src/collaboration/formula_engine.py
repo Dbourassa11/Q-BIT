@@ -10,6 +10,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 import structlog
+import uuid
 
 logger = structlog.get_logger(__name__)
 
@@ -28,7 +29,7 @@ class FormulaCategory(str, Enum):
 
 class Formula(BaseModel):
     """Represents a mathematical or algorithmic formula."""
-    formula_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    formula_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     category: FormulaCategory
     formula_notation: str  # Mathematical notation
@@ -44,7 +45,7 @@ class Formula(BaseModel):
 
 class Schema(BaseModel):
     """Represents a data or computational schema."""
-    schema_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    schema_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     schema_type: str  # "data", "computational", "architectural"
     structure: Dict[str, Any]
@@ -61,6 +62,9 @@ class FormulaEngine:
     Provides cutting-edge mathematical formulas, schemas, and computational
     logic for complex problem-solving.
     """
+    
+    # Configuration constants
+    MAX_FORMULA_SUGGESTIONS = 10  # Maximum number of formula suggestions to return
     
     def __init__(self):
         """Initialize the formula engine."""
@@ -226,7 +230,7 @@ class FormulaEngine:
                 unique_suggestions.append(formula)
                 seen_ids.add(formula.formula_id)
         
-        return unique_suggestions[:10]  # Return top 10
+        return unique_suggestions[:self.MAX_FORMULA_SUGGESTIONS]
     
     def add_schema(self, schema: Schema) -> str:
         """Add a schema to the engine."""

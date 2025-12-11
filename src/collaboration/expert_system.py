@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 import structlog
 
 from src.core.agent import BaseAgent, AgentConfig, AgentCapability, Task
+import uuid
 
 logger = structlog.get_logger(__name__)
 
@@ -36,7 +37,7 @@ class ExpertDomain(str, Enum):
 
 class ExpertInsight(BaseModel):
     """Represents an insight from an expert."""
-    insight_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    insight_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     expert_domain: ExpertDomain
     expert_id: str
     subject: str

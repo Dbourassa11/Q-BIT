@@ -15,6 +15,7 @@ from src.collaboration.recipe import CollaborationRecipe, RecipeManager, RecipeP
 from src.collaboration.expert_system import ExpertSystem, ExpertDomain, ExpertInsight
 from src.collaboration.formula_engine import FormulaEngine, Formula
 from src.collaboration.approval_workflow import ApprovalWorkflow, ApprovalStatus
+import uuid
 
 logger = structlog.get_logger(__name__)
 
@@ -39,7 +40,7 @@ class CollaborationSession(BaseModel):
     This is the main orchestrator that ties together recipes, experts,
     formulas, and approval workflows.
     """
-    session_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    session_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     description: str
     created_by: str
@@ -67,6 +68,9 @@ class CollaborationOrchestrator:
     This is the "cook button" system that activates cross-domain
     expert collaboration, formula generation, and approval workflows.
     """
+    
+    # Configuration constants
+    MAX_EXPERT_DOMAINS = 5  # Maximum number of expert domains to consult
     
     def __init__(self):
         """Initialize the collaboration orchestrator."""
@@ -249,7 +253,7 @@ class CollaborationOrchestrator:
                 domains.add(ExpertDomain.ARCHITECTURE)
                 domains.add(ExpertDomain.SYSTEMS_DESIGN)
         
-        return list(domains)[:5]  # Limit to 5 domains
+        return list(domains)[:self.MAX_EXPERT_DOMAINS]
     
     def _synthesize_solution(
         self,

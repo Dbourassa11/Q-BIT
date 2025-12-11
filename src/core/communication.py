@@ -11,6 +11,7 @@ from typing import Any, Callable, Dict, List, Optional, Set
 
 from pydantic import BaseModel, Field
 import structlog
+import uuid
 
 logger = structlog.get_logger(__name__)
 
@@ -36,7 +37,7 @@ class MessagePriority(int, Enum):
 
 class Message(BaseModel):
     """Represents a message between agents."""
-    message_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    message_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     message_type: MessageType
     priority: MessagePriority = MessagePriority.NORMAL
     sender_id: str

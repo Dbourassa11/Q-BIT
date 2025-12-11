@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional, Set
 
 from pydantic import BaseModel, Field
 import structlog
+import uuid
 
 logger = structlog.get_logger(__name__)
 
@@ -26,7 +27,7 @@ class StateType(str, Enum):
 
 class StateChange(BaseModel):
     """Represents a change in state."""
-    change_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    change_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     state_type: StateType
     entity_id: str
     field: str
@@ -39,7 +40,7 @@ class StateChange(BaseModel):
 
 class StateSnapshot(BaseModel):
     """A snapshot of state at a point in time."""
-    snapshot_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    snapshot_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     state_type: StateType
     entity_id: str
     state_data: Dict[str, Any]

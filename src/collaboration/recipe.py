@@ -11,6 +11,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Set
 from pydantic import BaseModel, Field
 import structlog
+import uuid
 
 logger = structlog.get_logger(__name__)
 
@@ -38,7 +39,7 @@ class IngredientQuality(str, Enum):
 
 class RecipeIngredient(BaseModel):
     """Represents a single ingredient in the collaboration recipe."""
-    ingredient_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    ingredient_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     type: IngredientType
     name: str
     description: str
@@ -69,7 +70,7 @@ class CollaborationRecipe(BaseModel):
     Implements a recipe metaphor where users add ingredients (ideas, requirements)
     that are mixed together and processed by expert agents to create solutions.
     """
-    recipe_id: str = Field(default_factory=lambda: str(__import__('uuid').uuid4()))
+    recipe_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     description: str
     phase: RecipePhase = RecipePhase.CONCEPTION
