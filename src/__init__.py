@@ -14,8 +14,15 @@ from src.core.lifecycle import AgentLifecycle
 from src.core.state import StateManager
 from src.core.communication import CommunicationHub
 from src.swarm.coordinator import SwarmCoordinator
-from src.programming.code_analyzer import CodeAnalyzer
 from src.programming.code_generator import CodeGenerator
+
+# Optional imports with heavy dependencies
+try:
+    from src.programming.code_analyzer import CodeAnalyzer
+    _has_code_analyzer = True
+except ImportError:
+    CodeAnalyzer = None
+    _has_code_analyzer = False
 
 __all__ = [
     "BaseAgent",
@@ -23,6 +30,8 @@ __all__ = [
     "StateManager",
     "CommunicationHub",
     "SwarmCoordinator",
-    "CodeAnalyzer",
     "CodeGenerator",
 ]
+
+if _has_code_analyzer:
+    __all__.append("CodeAnalyzer")
