@@ -95,8 +95,91 @@ docker-compose up -d
 docker-compose up -d --scale agent=5
 ```
 
+## 🎯 Hybrid Topology & Stigmergic Coordination (NEW)
+
+Q-BIT now features advanced coordination strategies:
+
+### Topology Router
+Intelligent task routing based on workload analysis:
+- **Centralized Coordinator**: For small workloads (<100 tasks)
+- **Hierarchical Clusters**: For medium workloads (100-1000 tasks)
+- **Independent Agents**: For large parallel workloads (>1000 tasks)
+
+### Stigmergic Coordination
+Swarm intelligence through environmental traces:
+- Indirect agent coordination via pheromone-like traces
+- Sparse grid storage for scalability
+- Optional Redis backend for multi-node deployments
+
+### Quick Start
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Optional: Install Redis support
+pip install redis
+```
+
+```python
+from python.qbit.topology import TopologyRouter
+from python.qbit.stigmergy import StigmergicEnvironment
+from python.qbit.coordinators import Task
+
+# Initialize router and environment
+router = TopologyRouter()
+environment = StigmergicEnvironment(grid_size=1000)
+await environment.initialize()
+
+# Route tasks to optimal coordinator
+tasks = [Task(task_id=f"task_{i}", task_type="compute") for i in range(100)]
+coordinator_type = router.route(tasks)
+coordinator = router.get_coordinator(coordinator_type)
+```
+
+### Running Tests
+
+```bash
+# Install test dependencies
+pip install pytest pytest-asyncio
+
+# Run all tests
+pytest tests/
+
+# Run specific test suite
+pytest tests/test_stigmergy_async.py
+pytest tests/test_topology_router_async.py
+
+# Run stress test (625 agents, CI-friendly)
+pytest tests/test_harness_scale.py
+```
+
+### Redis Backend (Optional)
+
+Enable Redis for multi-node deployments:
+
+```bash
+# Set Redis URL
+export REDIS_URL=redis://localhost:6379
+export QBIT_ENABLE_REDIS=true
+
+# Start Redis (Docker)
+docker run -d -p 6379:6379 redis:latest
+```
+
+```python
+# Use Redis backend
+environment = StigmergicEnvironment(
+    backend="redis",
+    redis_url="redis://localhost:6379"
+)
+```
+
 ## 📖 Documentation
 
+- [Topology Refactor](docs/topology_refactor.md) - Architecture, tuning, and integration
+- [Stigmergic Layer](docs/stigmergic_layer.md) - API, backends, and scaling
+- [Integration Guide](docs/integration.md) - Step-by-step integration
 - [Architecture Guide](docs/architecture.md)
 - [Agent Development](docs/agents.md)
 - [API Reference](docs/api.md)
