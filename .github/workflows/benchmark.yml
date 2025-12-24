@@ -1,0 +1,51 @@
+name: Benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      num_agents:
+        description: 'Number of agents to simulate'
+        required: true
+        default: '625'
+      num_steps:
+        description: 'Number of simulation steps'
+        required: true
+        default: '10'
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-asyncio
+    
+    - name: Run benchmark
+      run: |
+        # Run stress test with configured parameters
+        pytest tests/test_harness_scale.py::test_625_agents_stress -v -s
+      env:
+        NUM_AGENTS: ${{ github.event.inputs.num_agents }}
+        NUM_STEPS: ${{ github.event.inputs.num_steps }}
+    
+    - name: Run extended benchmarks
+      run: |
+        # Run all benchmark tests including slow ones
+        pytest tests/test_harness_scale.py -v -s -m "slow"
+      continue-on-error: true
+    
+    - name: Display results
+      run: |
+        echo "Benchmark completed successfully"
+        echo "Agents: ${{ github.event.inputs.num_agents }}"
+        echo "Steps: ${{ github.event.inputs.num_steps }}"
