@@ -8,7 +8,7 @@ without requiring network services.
 import asyncio
 import random
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from python.qbit.coordinators import Task, TaskStatus
@@ -195,7 +195,7 @@ class SimulatedWorkerPool:
                         
                         if success:
                             claimed_task.status = TaskStatus.COMPLETED
-                            claimed_task.completed_at = datetime.utcnow()
+                            claimed_task.completed_at = datetime.now(timezone.utc)
                             agent.tasks_completed += 1
                         else:
                             claimed_task.status = TaskStatus.FAILED
@@ -229,7 +229,7 @@ class SimulatedWorkerPool:
         Returns:
             Simulation statistics
         """
-        start_time = datetime.utcnow()
+        start_time = datetime.now(timezone.utc)
         
         for step in range(num_steps):
             if parallel:
@@ -246,7 +246,7 @@ class SimulatedWorkerPool:
             if self.environment:
                 await self.environment.decay()
         
-        end_time = datetime.utcnow()
+        end_time = datetime.now(timezone.utc)
         duration = (end_time - start_time).total_seconds()
         
         # Gather statistics

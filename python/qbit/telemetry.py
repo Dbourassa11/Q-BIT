@@ -6,7 +6,7 @@ without requiring external services.
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 try:
@@ -123,7 +123,7 @@ def record_metric(
         _metrics_registry[name].append({
             "value": value,
             "labels": labels,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         })
 
 
@@ -146,7 +146,7 @@ def record_agent_trajectory(
         "position": position,
         "action": action,
         "metadata": metadata or {},
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     
     _agent_trajectories.append(trajectory_point)

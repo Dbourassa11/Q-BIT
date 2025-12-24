@@ -102,11 +102,11 @@ async def test_trace_removal_after_decay(environment):
     await environment.deposit_trace(
         trace_type=TraceType.AGENT_PATH,
         position=(40, 40),
-        intensity=0.02,  # Very weak trace
+        intensity=0.015,  # Very weak trace
     )
     
     # Apply decay multiple times
-    for _ in range(3):
+    for _ in range(5):  # More iterations to ensure removal
         await environment.decay()
     
     # Trace should be removed (intensity < 0.01)

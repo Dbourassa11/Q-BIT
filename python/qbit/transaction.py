@@ -8,7 +8,7 @@ for distributed consistency.
 import asyncio
 import os
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 
@@ -44,7 +44,7 @@ class TransactionLog:
     transaction_id: str
     actions: List[Dict[str, Any]] = field(default_factory=list)
     status: TransactionStatus = TransactionStatus.PENDING
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     completed_at: Optional[datetime] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
@@ -150,7 +150,7 @@ class TransactionalSafety:
             transaction.actions.append({
                 "action_type": action_type,
                 "action_data": action_data,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             })
             
             # Persist to Redis if using Redis backend
@@ -184,7 +184,7 @@ class TransactionalSafety:
             
             # Update transaction status
             transaction.status = TransactionStatus.COMMITTED
-            transaction.completed_at = datetime.utcnow()
+            transaction.completed_at = datetime.now(timezone.utc)
             if metadata:
                 transaction.metadata.update(metadata)
             
@@ -235,7 +235,7 @@ class TransactionalSafety:
             
             # Update transaction status
             transaction.status = TransactionStatus.ROLLED_BACK
-            transaction.completed_at = datetime.utcnow()
+            transaction.completed_at = datetime.now(timezone.utc)
             if reason:
                 transaction.metadata["rollback_reason"] = reason
             

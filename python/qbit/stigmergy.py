@@ -9,7 +9,7 @@ in-memory (sparse dict) and optional Redis backends.
 import asyncio
 import os
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -48,7 +48,7 @@ class Trace:
     position: Tuple[int, int]
     intensity: float = 1.0
     metadata: Dict[str, Any] = field(default_factory=dict)
-    timestamp: datetime = field(default_factory=datetime.utcnow)
+    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     depositor_id: Optional[str] = None
     
     def __post_init__(self) -> None:

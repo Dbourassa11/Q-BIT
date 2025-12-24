@@ -9,7 +9,7 @@ Provides multiple coordination strategies:
 
 import asyncio
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional, Set
 
@@ -47,7 +47,7 @@ class Task:
     metadata: Dict[str, Any] = field(default_factory=dict)
     status: TaskStatus = TaskStatus.PENDING
     assigned_to: Optional[str] = None
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     completed_at: Optional[datetime] = None
 
 
@@ -144,7 +144,7 @@ class CentralizedCoordinator:
             if task_id in self._assigned_tasks:
                 task = self._assigned_tasks[task_id]
                 task.status = TaskStatus.COMPLETED if success else TaskStatus.FAILED
-                task.completed_at = datetime.utcnow()
+                task.completed_at = datetime.now(timezone.utc)
                 del self._assigned_tasks[task_id]
     
     async def get_stats(self) -> Dict[str, Any]:

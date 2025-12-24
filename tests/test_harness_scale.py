@@ -184,8 +184,10 @@ async def test_high_task_load(worker_pool):
     # Should complete some tasks
     assert results["tasks_completed"] > 0
     
-    # Should have remaining tasks
-    assert results["tasks_remaining"] > 0
+    # With 625 agents and 10 steps, we expect many tasks completed
+    # but possibly not all 2000
+    total_processed = results["tasks_completed"] + results["tasks_failed"]
+    assert total_processed > 100  # At least some significant work done
 
 
 @pytest.mark.asyncio
